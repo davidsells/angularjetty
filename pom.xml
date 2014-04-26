@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>persistentdesigns.com</groupId>
+    <artifactId>angularjsjetty</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>angularjs-webapp</name>
+
+ <!-- ======================== -->
+    <!-- Properties/Versions -->
+    <!-- ======================== -->
+    <properties>
+        <!-- Maven project settings -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- <buildnumber.version>1.1</buildnumber.version> -->
+        <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
+        <targetJdk>1.7</targetJdk>
+        <java.version>1.7</java.version>
+        <dw.version>0.6.2</dw.version>
+        <postgresql.version>9.1-901.jdbc4</postgresql.version>
+
+        <!--
+        Jetty (for the angularjs-webapp). Make sure that the version corresponds with the Jetty
+        version included with Dropwizard. See:
+        http://mvnrepository.com/artifact/com.yammer.dropwizard/dropwizard-core/0.6.2
+        -->
+        <jetty.version>8.1.10.v20130312</jetty.version>
+
+        <!-- For JSP jars -->
+        <glassfish.javax.version>2.2.3</glassfish.javax.version>
+    </properties>
+
+
+    <dependencies>
+        <!-- Servlet API -->
+        <!--dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+        </dependency-->
+
+        <!-- Jetty -->
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-webapp</artifactId>
+	    <version>${jetty.version}</version>
+        </dependency>
+
+        <!-- For the ProxyServlet -->
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlets</artifactId>
+	    <version>${jetty.version}</version>
+        </dependency>
+
+        <!-- JSP Support -->
+        <dependency>
+            <groupId>org.glassfish.web</groupId>
+            <artifactId>javax.servlet.jsp</artifactId>
+	    <version>${glassfish.javax.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+
+            <!--
+            The maven app assembler plugin will generate a script that sets up the classpath and runs your project.
+            Remember to set the JAVA_HOME to a JVM compatible with the Java version specified in the pom, otherwise
+            you might get the "UnsupportedClassVersionError : unsupported major.minor version 51.0" error when
+            trying to run the script (target/bin/webapp).
+            -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>appassembler-maven-plugin</artifactId>
+                <version>1.4</version>
+                <configuration>
+                    <assembleDirectory>target</assembleDirectory> 
+                    <programs>
+                        <program>
+                            <mainClass>com.persist.launch.AnguarJSWebApp</mainClass>
+                            <name>webapp</name>
+                        </program>
+                    </programs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>assemble</goal>
+                        </goals>
+                    </execution>				
+                </executions>
+            </plugin>
+
+            <!--
+            The jetty-maven-plugin can be used to run Jetty with the mvn jetty:run command. Setting the
+            scanIntervalSeconds to 0 means that it will hot swap continuously when the source code is
+            changed.
+            -->
+            <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <configuration>
+                    <scanIntervalSeconds>0</scanIntervalSeconds>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

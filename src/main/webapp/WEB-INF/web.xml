@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         version="2.5">
+
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+
+    <!-- Configure a proxy to the back-end services -->
+    <servlet>
+        <servlet-name>proxy</servlet-name>
+        <servlet-class>org.eclipse.jetty.servlets.ProxyServlet$Transparent</servlet-class>
+        <init-param>
+            <param-name>ProxyTo</param-name>
+            <param-value>http://localhost:9000/</param-value>
+        </init-param>
+        <init-param>
+            <param-name>Prefix</param-name>
+            <param-value>/api</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+        <!--async-supported>true</async-supported-->
+    </servlet>
+
+      <servlet>
+        <servlet-name>courseproxy</servlet-name>
+        <servlet-class>org.eclipse.jetty.servlets.ProxyServlet$Transparent</servlet-class>
+        <init-param>
+            <param-name>ProxyTo</param-name>
+            <param-value>http://localhost:9900/</param-value>
+        </init-param>
+        <init-param>
+            <param-name>Prefix</param-name>
+            <param-value>/cor</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+        <!--async-supported>true</async-supported-->
+    </servlet>
+
+    <!-- Make the proxy handle requests to /api/* -->
+    <servlet-mapping>
+        <servlet-name>proxy</servlet-name>
+        <url-pattern>/api/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>courseproxy</servlet-name>
+        <url-pattern>/cor/*</url-pattern>
+    </servlet-mapping>
+
+</web-app>

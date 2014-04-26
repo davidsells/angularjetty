@@ -1,0 +1,63 @@
+<h2>Simple CRUD app using RESTful backend services</h2>
+
+<p>
+    <b>Note:</b> <i>For this example to run, make sure that the backend services in the <code>dw-server</code> have been
+    started. See the README file in that module for how to do that.</i>
+</p>
+
+<div ng-controller="CoursesCtrl">
+
+    <div class="control-group">
+        <input class="span4" type="text" ng-model="searchText.$" placeholder="Filter the list..">
+        <!--
+         The following defines two buttons used for either hiding or showing the course form. The courseForn.show
+         variable in the CourseCtrl determines which button is displayed.
+        -->
+        <button ng-show="!courseForm.show" class="span3 btn" style="margin-left: 0; margin-right: 4px" type="button"
+                ng-click="toggleCourseForm()">Show course form</button>
+        <button ng-show="courseForm.show" class="span3 btn" style="margin-left: 0; margin-right: 4px" type="button"
+                ng-click="toggleCourseForm()">Hide course form</button>
+    </div>
+
+    <div ng-show="courseForm.show">
+        <form class="form-inline" ng-submit="saveCourse(courseForm.course)">
+            <input type="text" class="span3" placeholder="Name" ng-model="courseForm.course.name">
+            <input type="text" class="span4" placeholder="Description" ng-model="courseForm.course.short_description">
+            <input type="text" class="span4" placeholder="Icon" ng-model="courseForm.course.small_icon">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <!--
+             Note that the clear-button here must have the type attribute set to 'button' otherwise it will
+             by default get type=submit. See:
+             http://stackoverflow.com/questions/12319758/angularjs-clicking-a-button-within-a-form-causes-page-refresh
+            -->
+            <button type="button" class="btn" ng-click="clearForm()">Clear form</button>
+        </form>
+    </div>
+
+    <h3>List of courses</h3>
+
+    <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+            <th style="width: 100px">Operation</th>
+            <th style="width: 20px">Id</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Icon</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="p in courses | orderBy:'name' | filter:searchText">
+            <td style="width: 100px">
+                <button class="btn" ng-click="editCourse(p)"><i class="icon-edit"></i></button>
+                <button class="btn" ng-click="deleteCourse(p)"><i class="icon-trash"></i></button>
+            </td>
+            <td style="width: 20px">{{p.id}}</td>
+            <td>{{p.name}}</td>
+            <td>{{p.short_description}}</td>
+            <td><img src='{{p.small_icon}}'/></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
